@@ -1,26 +1,112 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ο Σινεφίλος</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Ο Σινεφίλος</title>
 </head>
-<body>
-  <div id="root"></div>
 
-  <script type="module">
-    document.getElementById("root").innerHTML = `
+<body style="margin:0;background:#111;color:white;font-family:Arial;">
+
+<div style="max-width:900px;margin:auto;padding:32px;">
+  <h1>🎬 Ο Σινεφίλος</h1>
+
+  <div style="display:flex;gap:10px;margin-bottom:20px;">
+    <input
+      id="imdb"
+      placeholder="IMDb link..."
+      style="flex:1;padding:12px;border-radius:12px;border:none;"
+    />
+
+    <button
+      onclick="addMovie()"
+      style="padding:12px 20px;border:none;border-radius:12px;cursor:pointer;"
+    >
+      Add
+    </button>
+  </div>
+
+  <div id="movies"></div>
+</div>
+
+<script>
+const API_KEY = "faa7b4d1";
+let movies = [];
+
+async function addMovie() {
+  const imdbLink = document.getElementById("imdb").value;
+
+  const match = imdbLink.match(/tt\\d+/);
+
+  if (!match) return;
+
+  const imdbId = match[0];
+
+  const res = await fetch(
+    "https://www.omdbapi.com/?apikey=" +
+      API_KEY +
+      "&i=" +
+      imdbId
+  );
+
+  const data = await res.json();
+
+  if (data.Response === "False") return;
+
+  movies.push({
+    title: data.Title,
+    year: data.Year,
+    poster: data.Poster,
+    imdb: imdbLink
+  });
+
+  movies.sort((a, b) =>
+    a.title.localeCompare(b.title, "el")
+  );
+
+  render();
+
+  document.getElementById("imdb").value = "";
+}
+
+function render() {
+  document.getElementById("movies").innerHTML =
+    movies
+      .map(
+        (movie) => `
       <div style="
-        background:#111;
-        color:white;
-        min-height:100vh;
-        padding:40px;
-        font-family:Arial;
+        display:flex;
+        gap:16px;
+        margin-bottom:20px;
+        background:#1a1a1a;
+        padding:16px;
+        border-radius:16px;
       ">
-        <h1>🎬 Ο Σινεφίλος</h1>
-        <p>Η λίστα ετοιμάζεται...</p>
+        <img
+          src="${movie.poster}"
+          width="90"
+          style="border-radius:10px;"
+        />
+
+        <div>
+          <a
+            href="${movie.imdb}"
+            target="_blank"
+            style="color:white;font-size:20px;"
+          >
+            ${movie.title}
+          </a>
+
+          <div style="opacity:.8;">
+            ${movie.year}
+          </div>
+        </div>
       </div>
-    `;
-  </script>
+    `
+      )
+      .join("");
+}
+</script>
+
 </body>
 </html>
