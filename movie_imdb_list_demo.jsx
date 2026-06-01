@@ -27,6 +27,18 @@ export default function MovieIMDbListDemo() {
       category: 'movie',
     },
   ]);
+  ,
+{
+  title: 'The Dark Knight',
+  year: '2008',
+  runtime: '152 min',
+  imdb: 'https://www.imdb.com/title/tt0468569/',
+  poster:
+    'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODIyNF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg',
+  rating: '9.0',
+  genre: 'Action / Crime / Drama',
+  category: 'movie',
+}
 
   const previewId = useMemo(() => {
     const match = imdbLink.match(/tt\d+/);
