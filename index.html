@@ -31,10 +31,15 @@
 
 <script>
 const API_KEY = "faa7b4d1";
-let movies = [];
+
+let movies =
+  JSON.parse(localStorage.getItem("movies") || "[]");
+
+render();
 
 async function addMovie() {
-  const imdbLink = document.getElementById("imdb").value;
+  const imdbLink =
+    document.getElementById("imdb").value;
 
   const match = imdbLink.match(/tt\d+/);
 
@@ -57,16 +62,26 @@ async function addMovie() {
     title: data.Title,
     year: data.Year,
     poster: data.Poster,
-    imdb: imdbLink
+    imdb: imdbLink,
+    rating: data.imdbRating,
+    genre: data.Genre
   });
 
   movies.sort((a, b) =>
     a.title.localeCompare(b.title, "el")
   );
 
+  save();
   render();
 
   document.getElementById("imdb").value = "";
+}
+
+function save() {
+  localStorage.setItem(
+    "movies",
+    JSON.stringify(movies)
+  );
 }
 
 function render() {
@@ -82,6 +97,7 @@ function render() {
         padding:16px;
         border-radius:16px;
       ">
+
         <img
           src="${movie.poster}"
           width="90"
@@ -92,13 +108,25 @@ function render() {
           <a
             href="${movie.imdb}"
             target="_blank"
-            style="color:white;font-size:20px;"
+            style="
+              color:white;
+              font-size:20px;
+              text-decoration:none;
+            "
           >
             ${movie.title}
           </a>
 
           <div style="opacity:.8;">
             ${movie.year}
+          </div>
+
+          <div>
+            ⭐ IMDb: ${movie.rating}
+          </div>
+
+          <div style="opacity:.8;">
+            🎭 ${movie.genre}
           </div>
         </div>
       </div>
