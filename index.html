@@ -36,7 +36,7 @@ let movies = [];
 async function addMovie() {
   const imdbLink = document.getElementById("imdb").value;
 
-  const match = imdbLink.match(/tt\\d+/);
+  const match = imdbLink.match(/tt\d+/);
 
   if (!match) return;
 
