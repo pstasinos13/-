@@ -32,8 +32,38 @@
 </div>
 
 <script>
-function addMovie() {
-  alert("Θα βάλουμε το επόμενο βήμα αμέσως μετά.");
+const API_KEY = "faa7b4d1";
+
+async function addMovie() {
+  const imdbLink =
+    document.getElementById("imdb").value;
+
+  const match = imdbLink.match(/tt\d+/);
+
+  if (!match) return;
+
+  const imdbId = match[0];
+
+  const res = await fetch(
+    "https://www.omdbapi.com/?apikey=" +
+      API_KEY +
+      "&i=" +
+      imdbId
+  );
+
+  const data = await res.json();
+
+  if (data.Response === "False") return;
+
+  alert(
+    "Προστέθηκε: " +
+      data.Title +
+      " (" +
+      data.Year +
+      ")"
+  );
+
+  document.getElementById("imdb").value = "";
 }
 </script>
 
